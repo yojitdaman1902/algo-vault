@@ -1,8 +1,20 @@
 # AlgoVault
 
-**One Platform. Every Round. Placement Ready.**
+**Ace Your Semesters. Crack Your Placements.**
 
-Local-first Online Assessment preparation: Coding & DSA, Quantitative Aptitude, Logical Reasoning, and Verbal Ability / English, with the original academic PYQ bank intact. No backend, authentication, external APIs, or code execution.
+Two local-first preparation pillars: **Campus Academics** for semester examination practice and **Placement Preparation** for Coding & DSA, Quantitative Aptitude, Logical Reasoning, Verbal Ability / English, and OA simulations. No required backend, authentication, external API, environment configuration, or arbitrary code execution.
+
+## Campus Academics
+
+Open **Campus Academics** in the main navigation, then **Explore PYQ Papers**. The dedicated academic module contains **14 fictional papers, 70 questions, 12 subjects, semesters 1–4, years 2022–2026, and three examination types**. Every paper is explicitly illustrative/demo data, not a verified past university examination.
+
+- Papers / Questions views with combined semester, subject, year, examination type, topic, keyword, and unpractised-only filters; no unrelated fallback results.
+- Paper details with individual toggles, checkbox selection, validated bulk actions, reversible topic actions scoped to that paper, and whole-paper completion.
+- Visible success notifications and a derived **Paper Completed — 100%** state.
+- Academic dashboard showing question-weighted progress by paper, subject/year, semester, and topic, plus incomplete-topic review links.
+- Same existing practised-ID Set and five-item Revise Next queue; completing an academic revision item updates its paper and all academic metrics. Existing placement data and assessment history are retained.
+
+See [Campus Academics data model, judge journey, verification checklist, and limitations](docs/CAMPUS-ACADEMICS.md). Source review was performed; browser, build, typecheck, and end-to-end tests have **not been executed** in this implementation session.
 
 ## OA expansion
 

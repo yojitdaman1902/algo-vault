@@ -16,8 +16,10 @@ import { RevisionWorkspace } from "@/components/revision/RevisionWorkspace";
 import { RevisionPinButton } from "@/components/revision/RevisionPinButton";
 import { addToQueue } from "@/utils/revision";
 import { toast } from "sonner";
+import CampusAcademics from '@/pages/CampusAcademics';
+import { academicQuestions } from '@/data/academics';
 
-type Section = "dashboard" | "bank" | "revision" | "progress" | "time-machine";
+type Section = "dashboard" | "bank" | "revision" | "progress" | "time-machine" | "academics";
 
 const difficultyClass: Record<Difficulty, string> = { Easy: "bg-emerald-50 text-emerald-700", Medium: "bg-amber-50 text-amber-700", Hard: "bg-rose-50 text-rose-700" };
 
@@ -53,13 +55,20 @@ function ProgressPage({ practised }: { practised: Set<string> }) { const complet
 
 const DetailModal = QuestionDetail;
 
-const navItems: { id: Section; label: string; icon: typeof LayoutDashboard }[] = [{ id: "dashboard", label: "Dashboard", icon: LayoutDashboard }, { id: "bank", label: "Question Bank", icon: BookOpen }, { id: "revision", label: "Revise Next", icon: Pin }, { id: "progress", label: "My Progress", icon: BarChart3 }, { id: "time-machine", label: "Time Machine", icon: Target }];
+const navItems: { id: Section; label: string; icon: typeof LayoutDashboard }[] = [{ id: "dashboard", label: "Dashboard", icon: LayoutDashboard }, { id: "academics", label: "Campus Academics", icon: ClipboardList }, { id: "bank", label: "Question Bank", icon: BookOpen }, { id: "revision", label: "Revise Next", icon: Pin }, { id: "progress", label: "My Progress", icon: BarChart3 }, { id: "time-machine", label: "Time Machine", icon: Target }];
 
-const Index = () => { const [year, setYear] = useState<string | null>(() => storage.getYear()); const [section, setSection] = useState<Section>("dashboard"); const [mobileOpen, setMobileOpen] = useState(false); const [practised, setPractisedState] = useState<Set<string>>(() => storage.getPractised()); const [revision, setRevision] = useState<string[]>(() => storage.getRevision()); const [selected, setSelected] = useState<Question | null>(null); const questionsById = useMemo(() => new Map(questions.map(q => [q.id, q])), []);
+const Index = () => { const [year, setYear] = useState<string | null>(() => storage.getYear()); const [section, setSection] = useState<Section>("dashboard"); const [mobileOpen, setMobileOpen] = useState(false); const [practised, setPractisedState] = useState<Set<string>>(() => storage.getPractised()); const [revision, setRevision] = useState<string[]>(() => storage.getRevision()); const [selected, setSelected] = useState<Question | null>(null); const questionsById = useMemo(() => new Map<string, Question>([...questions, ...academicQuestions].map(q => [q.id, q])), []);
   const [bankTopic, setBankTopic] = useState<string | undefined>();
   const current = useRef({ practised, revision });
   useEffect(() => { storage.setPractised(practised); }, [practised]);
   useEffect(() => { storage.setRevision(revision); }, [revision]);
+  const markAcademic = (ids: string[], value: boolean) => {
+    const allowed = new Set(academicQuestions.map(q => q.id));
+    const next = new Set(current.current.practised);
+    ids.filter(id => allowed.has(id)).forEach(id => value ? next.add(id) : next.delete(id));
+    current.current.practised = next;
+    setPractisedState(next);
+  };
   const setPractised = (id: string) => {
     if (!questionsById.has(id)) return;
     const next = new Set(current.current.practised);
@@ -107,8 +116,10 @@ const Index = () => { const [year, setYear] = useState<string | null>(() => stor
     <main className="main-area">
       <header className="topbar"><button onClick={() => setMobileOpen(true)} className="rounded-lg p-2 text-slate-500 hover:bg-white lg:hidden"><Menu size={20}/></button><div className="lg:hidden"><Brand/></div><div className="ml-auto flex items-center gap-3"><div className="hidden items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-semibold text-slate-500 sm:flex"><span className="h-1.5 w-1.5 rounded-full bg-emerald-500"/>Local workspace</div><div className="avatar">{year}</div></div></header>
       <div className="content">
+        {section === 'dashboard' && <section className="mb-6 rounded-2xl border border-indigo-200 bg-indigo-50 p-5"><h2 className="text-xl font-bold text-indigo-950">Ace Your Semesters. Crack Your Placements.</h2><p className="mt-2 text-sm text-slate-700">Two preparation pillars. One focused workspace.</p><button className="primary-button mt-4" onClick={() => go('academics')}>Campus Academics · Explore PYQ Papers <ArrowRight size={15}/></button></section>}
         {(section === 'dashboard' || section === 'progress') && <CategoryProgress practised={practised}/>}
         {section === 'dashboard' && <Dashboard practised={practised} revision={revision} year={year} go={go}/>}
+        {section === 'academics' && <CampusAcademics practised={practised} revision={revision} onPractice={markAcademic} onPin={toggleRevision} onRevision={() => go('revision')}/>}
         {section === 'bank' && <Bank key={bankTopic ?? 'all'} initialTopic={bankTopic} practised={practised} revision={revision} setPractised={setPractised} toggleRevision={toggleRevision} openQuestion={setSelected}/>}
         {section === 'revision' && <RevisionWorkspace revision={revision} practised={practised} questionsById={questionsById} onRemove={removeRevision} onComplete={completeRevision} openQuestion={setSelected} onExplore={exploreRevision}/>}
         {section === 'progress' && <ProgressPage practised={practised}/>}
@@ -121,8 +132,8 @@ const Index = () => { const [year, setYear] = useState<string | null>(() => stor
 function Welcome({ onChoose }: { onChoose: (year: string) => void }) {
   const [selected, setSelected] = useState('');
   return <div className="welcome-page"><div className="welcome-card"><div className="mb-12"><Brand/></div><div className="grid items-center gap-10 lg:grid-cols-[1fr_0.7fr]">
-    <div><div className="eyebrow"><Sparkles size={13}/> Your complete OA workspace</div><h1 className="mt-5 text-4xl font-bold tracking-[-0.055em] text-slate-950 sm:text-5xl">One Platform. Every Round.<br/><span className="text-indigo-600">Placement Ready.</span></h1><p className="mt-5 max-w-md text-sm leading-7 text-slate-600">Coding & DSA, Quantitative Aptitude, Logical Reasoning and English — alongside your university PYQs. Choose a year for your workspace label; every question stays accessible.</p><div className="mt-8 max-w-sm"><p className="mb-2 text-xs font-bold text-slate-700">Choose an academic year</p><div className="grid grid-cols-3 gap-2">{years.map(y => <button key={y} aria-pressed={selected === y} onClick={() => setSelected(y)} className={`year-option ${selected === y ? 'selected' : ''}`}>{y}</button>)}</div><button disabled={!selected} onClick={() => onChoose(selected)} className="primary-button mt-4 w-full justify-center disabled:cursor-not-allowed disabled:opacity-40">Enter AlgoVault <ArrowRight size={15}/></button></div></div>
-    <div className="welcome-visual"><div className="visual-grid"/><div className="study-card card-a"><BookOpen size={17} className="text-indigo-500"/><div><b>Question bank</b><small>{questions.length} demonstration prompts</small></div></div><div className="study-card card-b"><TrendingUp size={17} className="text-emerald-500"/><div><b>Four categories</b><small>One shared revision queue</small></div></div><div className="visual-person"><div className="person-head"/><div className="person-body"/></div><div className="visual-circle one"/><div className="visual-circle two"/></div>
+    <div><div className="eyebrow"><Sparkles size={13}/> Academics + Placement Preparation</div><h1 className="mt-5 text-4xl font-bold tracking-[-0.055em] text-slate-950 sm:text-5xl">Ace Your Semesters.<br/><span className="text-indigo-600">Crack Your Placements.</span></h1><p className="mt-5 max-w-md text-sm leading-7 text-slate-600">Semester papers and academic progress alongside Coding & DSA, Quantitative Aptitude, Logical Reasoning and English. Choose a year for your workspace label; every paper and question stays accessible.</p><div className="mt-8 max-w-sm"><p className="mb-2 text-xs font-bold text-slate-700">Choose an academic year</p><div className="grid grid-cols-3 gap-2">{years.map(y => <button key={y} aria-pressed={selected === y} onClick={() => setSelected(y)} className={`year-option ${selected === y ? 'selected' : ''}`}>{y}</button>)}</div><button disabled={!selected} onClick={() => onChoose(selected)} className="primary-button mt-4 w-full justify-center disabled:cursor-not-allowed disabled:opacity-40">Enter AlgoVault <ArrowRight size={15}/></button></div></div>
+    <div className="welcome-visual"><div className="visual-grid"/><div className="study-card card-a"><BookOpen size={17} className="text-indigo-500"/><div><b>Question bank</b><small>{questions.length + academicQuestions.length} demonstration prompts</small></div></div><div className="study-card card-b"><TrendingUp size={17} className="text-emerald-500"/><div><b>Two preparation pillars</b><small>One shared revision queue</small></div></div><div className="visual-person"><div className="person-head"/><div className="person-body"/></div><div className="visual-circle one"/><div className="visual-circle two"/></div>
     </div><div className="mt-12 flex flex-wrap gap-6 border-t border-slate-100 pt-5 text-xs text-slate-600"><span>No sign-up required</span><span>Progress saved locally</span><span>Illustrative exam + placement practice</span></div></div></div>;
 }
 

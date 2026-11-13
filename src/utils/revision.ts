@@ -1,9 +1,10 @@
 import { questions } from '@/data/questions';
+import { academicQuestions } from '@/data/academics';
 import type { Question } from '@/types/question';
 
 export const REVISION_CAPACITY = 5;
 export const PIN_INELIGIBLE = 'Already practised. Only unanswered or Hard questions can be pinned.';
-const validIds = new Set(questions.map(q => q.id));
+const validIds = new Set([...questions, ...academicQuestions].map(q => q.id));
 export function validQuestionIds(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
   return [...new Set(value.filter((id): id is string => typeof id === 'string' && validIds.has(id)))];
