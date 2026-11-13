@@ -30,3 +30,10 @@ Six concise DOC-01 through DOC-06 files now live in docs/ and are linked from RE
 No functional code, dependencies, navigation, sample data, or persistence keys were modified during this audit. No required environment variables/external runtime service or apparent embedded credentials were found in inspected source/config. The template external link and cookie-writing UI sidebar are unused by current mounted app code; hosting/dependency internals were not security-audited.
 
 Submission is not yet fully evidenced: build/typecheck/browser tests remain unexecuted, and no verified public preview URL, screenshot, or recording is supplied. DOC-01 capture filenames are planned references only. Preserve this distinction in future handoffs. The audit did not clear or overwrite existing user progress.
+
+## OA expansion after judge feedback
+The product now spans Coding & DSA, Quantitative Aptitude, Logical Reasoning, and Verbal Ability / English. Original IDs remain intact; 32 new four-choice MCQs are appended via data/oaQuestions.ts. Missing category means Coding & DSA. The existing companies field remains the company-tag field; no parallel per-category state or queues were created.
+
+QuestionBank adds category filtering and MiniOA entry; QuestionDetail/McqPractice handle answer selection and explanations with shared practise/pin callbacks. CategoryProgress appears in Dashboard and My Progress. MiniOA adapts shared question records via data/oaAssessments.ts to the existing TimedAssessment, with 2 questions per category and real scores. The assessment history registry recognizes new IDs, while original Time Machine selection and its autopsy/ghost fixtures are unchanged. Standalone MCQ answers are transient; finished Mini OA attempts use the existing capped v3 history. Existing storage keys are unchanged.
+
+All new answer keys/explanations were reviewed in source; runtime/build/mobile/regression checks remain unexecuted. docs/OA-EXPANSION.md contains the current scope, answer-key review and checklist and supersedes older DSA-only scope statements.

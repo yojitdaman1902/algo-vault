@@ -1,4 +1,5 @@
 import type { Question } from "@/types/question";
+import { oaQuestions } from './oaQuestions';
 
 const academic = (id: string, title: string, topic: string, difficulty: Question["difficulty"], year: string, semester: string, subject: string, description: string, companies: string[] = [], exampleInput?: string, exampleOutput?: string): Question => ({ id, title, topic, difficulty, year, semester, subject, description, companies, type: "Academic PYQ", exampleInput, exampleOutput });
 const placement = (id: string, title: string, topic: string, difficulty: Question["difficulty"], companies: string[], description: string, exampleInput?: string, exampleOutput?: string): Question => ({ id, title, topic, difficulty, companies, description, type: "Placement Practice", exampleInput, exampleOutput });
@@ -47,9 +48,10 @@ export const questions: Question[] = [
   placement("place-13", "Implement Trie", "Trees", "Medium", ["Google", "Microsoft"], "Implement insert, search, and prefix operations for a trie.", "insert('apple'), startsWith('app')", "true"),
   placement("place-14", "House Robber", "Dynamic Programming", "Medium", ["Amazon", "Accenture"], "Maximize stolen value from non-adjacent houses on a street.", "nums=[2,7,9,3,1]", "12"),
   placement("place-15", "N-Queens", "Backtracking", "Hard", ["Google", "Microsoft"], "Place n queens on an n×n board so that no two queens attack each other.", "n=4", "2 solutions"),
+  ...oaQuestions,
 ];
 
-export const topics = ["Arrays", "Strings", "Linked Lists", "Stacks", "Queues", "Trees", "Graphs", "Hashing", "Recursion", "Sorting", "Searching", "Dynamic Programming", "Greedy Algorithms", "Backtracking"];
+export const topics = [...new Set(questions.map(q => q.topic))];
 export const subjects = ["Data Structures", "Design and Analysis of Algorithms", "Programming Fundamentals"];
 export const companies = ["Amazon", "Google", "Microsoft", "TCS", "Infosys", "Accenture", "Wipro"];
 export const years = ["2022", "2023", "2024", "2025", "2026"];

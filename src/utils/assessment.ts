@@ -1,4 +1,5 @@
 import { questions } from '@/data/questions';
+import { oaAssessableQuestions } from '@/data/oaAssessments';
 import type { AssessmentConfig, AssessableQuestion, DiagnosticFixture, QuestionAttempt, AttemptEvent } from '@/types/assessment';
 
 export const ASSESSABLE_QUESTIONS: AssessableQuestion[] = [
@@ -19,7 +20,7 @@ export function diagnosisFor(q: AssessableQuestion, answer: string) {
  return undefined;
 }
 export const evaluateAnswer = (q: AssessableQuestion, answer: string) => answer === q.correctAnswer;
-export const getAssessable = (id:string) => ASSESSABLE_QUESTIONS.find(q=>q.id===id);
+export const getAssessable = (id:string) => ASSESSABLE_QUESTIONS.find(q=>q.id===id) ?? oaAssessableQuestions.find(q=>q.id===id);
 export const questionForAssessable = (q:AssessableQuestion) => questions.find(x=>x.id===(q.bankQuestionId??q.id));
 export function generateAssessment(config:AssessmentConfig) {
  const matches=ASSESSABLE_QUESTIONS.filter(q=>q.companyTags.includes(config.company)&&q.years.includes(config.interviewYear)&&(config.difficulty==='Mixed'||questionForAssessable(q)?.difficulty===config.difficulty));

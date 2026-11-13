@@ -1,6 +1,18 @@
 # AlgoVault
 
-Local-first DSA question bank and signature learning workspace. No backend, authentication, external APIs, or code execution.
+**One Platform. Every Round. Placement Ready.**
+
+Local-first Online Assessment preparation: Coding & DSA, Quantitative Aptitude, Logical Reasoning, and Verbal Ability / English, with the original academic PYQ bank intact. No backend, authentication, external APIs, or code execution.
+
+## OA expansion
+
+Added 30 non-DSA MCQs (10 per new category) and two DSA MCQs alongside all original questions. Category filters, answer practice with explanations/retry, category-wise progress, and one shared five-item Revise Next queue are implemented. Old question IDs and storage keys are preserved.
+
+**Demo:** Question Bank → Quantitative Aptitude → A percentage of a quantity → choose an answer → Submit → Retry or Mark as practised. Dashboard/My Progress show category completion. Use **Try the 8-question Mini OA** for two questions per category with one countdown and real scoring.
+
+See [OA expansion, answer-key review, scoring and test checklist](docs/OA-EXPANSION.md). Source/content review is complete; runtime/build/browser checks are still pending. Standalone answer feedback is transient; practised flags and revision IDs persist. Mini OA finished attempts share existing capped history; current rounds/reports do not resume after refresh.
+
+The original Time Machine/Autopsy/Ghost demo below remains available; its five curated DSA variants are separate from the new Mini OA selection. Earlier audit notes below describe the pre-expansion audit, not a claim that this expansion was documentation-only.
 
 ## Official VibeSprint submission documents
 

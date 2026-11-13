@@ -64,3 +64,13 @@ Limits: browser refresh durability depends on available localStorage. No multi-t
 - [ ] Package source/manifests/lockfile/config/docs, excluding personal/editor state and dependency folders.
 
 Audit actions actually performed: file reads, directory listings, source/config searches, logic review, and documentation inventory/checklist count checks. No browser test, build, dependency reinstall, or dev-server restart was executed.
+
+## OA expansion
+- [x] Preserve original questions/IDs; add 10 Quant, 10 LR, 10 Verbal and 2 DSA MCQs with four choices and explanations.
+- [x] Add category filtering with all prior AND filters and explicit academic-metadata mismatch guidance.
+- [x] Add standalone answer evaluation, explanation/retry, and shared practise/pin actions.
+- [x] Add actual category completion/tie-aware highest and lowest indicators to Dashboard/My Progress.
+- [x] Add mixed 8-question Mini OA using the existing timed engine; extend history ID recognition without changing legacy Time Machine selection.
+- [x] Review all 32 new answer keys and explanations; inspect persistence and queue integration in source.
+- [ ] Execute the runtime checklist in docs/OA-EXPANSION.md, including perfect/empty Mini OA scoring, timeout, original signature regression, all-category queue/refresh and mobile checks.
+- [ ] Run build/typecheck and capture real evidence. No execution tools are available in this session; no runtime pass is claimed.
