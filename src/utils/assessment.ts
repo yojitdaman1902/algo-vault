@@ -29,8 +29,40 @@ export function generateAssessment(config:AssessmentConfig) {
 const KEY='algovault:v3:attempt-history';
 let memory:QuestionAttempt[]=[];
 let memoryOnly=false;
-const valid=(a:any):a is QuestionAttempt=>a && typeof a.id==='string' && !!getAssessable(a.questionId) && Number.isFinite(a.startedAt) && Number.isFinite(a.elapsedMs) && a.elapsedMs>=0 && Number.isInteger(a.incorrectSubmissionCount) && a.incorrectSubmissionCount>=0 && Number.isInteger(a.hintUsageCount) && a.hintUsageCount>=0 && ['correct','incorrect','incomplete'].includes(a.finalResult) && Array.isArray(a.answerSubmissions) && a.answerSubmissions.every((x:unknown)=>typeof x==='string') && Array.isArray(a.events) && a.events.every((e:any,i:number)=>e && ['started','incorrect','hint','correct','finished'].includes(e.type)&&Number.isFinite(e.atMs)&&e.atMs>=0&&e.atMs<=a.elapsedMs&&(i===0||e.atMs>=a.events[i-1].atMs)&&(e.answer===undefined||typeof e.answer==='string'));
-function read():QuestionAttempt[]{if(memoryOnly)return memory;try {const data=JSON.parse(localStorage.getItem(KEY)??'[]');return Array.isArray(data)?data.filter(valid).slice(-100):[];}catch{return memory;}}
+
+// Storage is user-controlled input. Reject malformed records individually so one
+// corrupt entry cannot discard the other valid attempts or poison ghost timings.
+function valid(value: unknown): value is QuestionAttempt {
+ if (!value || typeof value !== 'object') return false;
+ const a = value as Record<string, unknown>;
+ if (typeof a.id !== 'string' || !a.id || typeof a.questionId !== 'string' || !getAssessable(a.questionId)) return false;
+ if (typeof a.startedAt !== 'number' || !Number.isFinite(a.startedAt) || a.startedAt < 0 || typeof a.elapsedMs !== 'number' || !Number.isFinite(a.elapsedMs) || a.elapsedMs < 0) return false;
+ if (a.completedAt !== undefined && (typeof a.completedAt !== 'number' || !Number.isFinite(a.completedAt) || a.completedAt < 0)) return false;
+ if (typeof a.incorrectSubmissionCount !== 'number' || !Number.isInteger(a.incorrectSubmissionCount) || a.incorrectSubmissionCount < 0 || typeof a.hintUsageCount !== 'number' || !Number.isInteger(a.hintUsageCount) || a.hintUsageCount < 0) return false;
+ if (a.finalResult !== 'correct' && a.finalResult !== 'incorrect' && a.finalResult !== 'incomplete') return false;
+ if (!Array.isArray(a.answerSubmissions) || !a.answerSubmissions.every((answer: unknown) => typeof answer === 'string') || !Array.isArray(a.events)) return false;
+ let previousTime = 0;
+ for (const value of a.events) {
+   if (!value || typeof value !== 'object') return false;
+   const event = value as Record<string, unknown>;
+   if (event.type !== 'started' && event.type !== 'incorrect' && event.type !== 'hint' && event.type !== 'correct' && event.type !== 'finished') return false;
+   if (typeof event.atMs !== 'number' || !Number.isFinite(event.atMs) || event.atMs < previousTime || event.atMs > a.elapsedMs || (event.answer !== undefined && typeof event.answer !== 'string')) return false;
+   previousTime = event.atMs;
+ }
+ return true;
+}
+function read(): QuestionAttempt[] {
+ if (memoryOnly) return memory;
+ try {
+   const data: unknown = JSON.parse(localStorage.getItem(KEY) ?? '[]');
+   if (!Array.isArray(data)) return memory;
+   memory = [...new Map(data.filter(valid).map(a => [a.id, a])).values()].slice(-100);
+   return memory;
+ } catch {
+   // A denied read or malformed JSON must not erase the last valid session copy.
+   return memory;
+ }
+}
 export const attemptStorage={getAll:read,getForQuestion:(id:string)=>read().filter(a=>a.questionId===id).sort((a,b)=>b.startedAt-a.startedAt),save:(a:QuestionAttempt)=>{memory=[...read().filter(x=>x.id!==a.id),a].slice(-100);try{localStorage.setItem(KEY,JSON.stringify(memory));memoryOnly=false;return true;}catch{memoryOnly=true;return false;}}};
 export function newAttempt(questionId:string):QuestionAttempt{return {id:crypto.randomUUID(),questionId,startedAt:Date.now(),elapsedMs:0,answerSubmissions:[],incorrectSubmissionCount:0,hintUsageCount:0,finalResult:'incomplete',events:[{type:'started',atMs:0}]};}
 export function record(a:QuestionAttempt,event:AttemptEvent):QuestionAttempt{return {...a,elapsedMs:event.atMs,events:[...a.events,event],answerSubmissions:event.answer===undefined?a.answerSubmissions:[...a.answerSubmissions,event.answer],incorrectSubmissionCount:a.incorrectSubmissionCount+(event.type==='incorrect'?1:0),hintUsageCount:a.hintUsageCount+(event.type==='hint'?1:0),finalResult:event.type==='correct'?'correct':event.type==='incorrect'?'incorrect':a.finalResult};}

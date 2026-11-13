@@ -12,6 +12,8 @@ export function validQuestionIds(value: unknown): string[] {
 export const normalizeQueue = (value: unknown) => validQuestionIds(value).slice(0, REVISION_CAPACITY);
 export const canPin = (question: Question, practised: boolean) => !practised || question.difficulty === 'Hard';
 
+// Minute 40 twist: rejected pins return the original queue without evicting
+// existing work. Hard is the application's explicit definition of difficult.
 export function addToQueue(queue: string[], question: Question, practised: boolean) {
   if (queue.includes(question.id)) return { queue, message: 'Already in Revise Next.' };
   if (!canPin(question, practised)) return { queue, message: PIN_INELIGIBLE };

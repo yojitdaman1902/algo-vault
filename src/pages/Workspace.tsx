@@ -59,10 +59,13 @@ const navItems: { id: Section; label: string; icon: typeof LayoutDashboard }[] =
 
 const Index = () => { const [year, setYear] = useState<string | null>(() => storage.getYear()); const [section, setSection] = useState<Section>("dashboard"); const [mobileOpen, setMobileOpen] = useState(false); const [practised, setPractisedState] = useState<Set<string>>(() => storage.getPractised()); const [revision, setRevision] = useState<string[]>(() => storage.getRevision()); const [selected, setSelected] = useState<Question | null>(null); const questionsById = useMemo(() => new Map<string, Question>([...questions, ...academicQuestions].map(q => [q.id, q])), []);
   const [bankTopic, setBankTopic] = useState<string | undefined>();
+  // One practised-ID Set drives both catalogs. Synchronous ref updates prevent
+  // consecutive actions from reading stale state before React renders again.
   const current = useRef({ practised, revision });
   useEffect(() => { storage.setPractised(practised); }, [practised]);
   useEffect(() => { storage.setRevision(revision); }, [revision]);
   const markAcademic = (ids: string[], value: boolean) => {
+    // Bulk actions set a status rather than toggle: repeating them is idempotent.
     const allowed = new Set(academicQuestions.map(q => q.id));
     const next = new Set(current.current.practised);
     ids.filter(id => allowed.has(id)).forEach(id => value ? next.add(id) : next.delete(id));
@@ -76,6 +79,7 @@ const Index = () => { const [year, setYear] = useState<string | null>(() => stor
     current.current.practised = next;
     setPractisedState(next);
   };
+  // Removal only edits the queue; it must never undo completed practice.
   const removeRevision = (id: string) => {
     if (!current.current.revision.includes(id)) return;
     const next = current.current.revision.filter(x => x !== id);
@@ -85,6 +89,7 @@ const Index = () => { const [year, setYear] = useState<string | null>(() => stor
   };
   const completeRevision = (id: string) => {
     if (!questionsById.has(id) || !current.current.revision.includes(id)) return;
+    // Add, never toggle, then clear; academic paper metrics derive from this Set.
     const nextPractised = new Set(current.current.practised).add(id);
     const nextRevision = current.current.revision.filter(x => x !== id);
     current.current = { practised: nextPractised, revision: nextRevision };

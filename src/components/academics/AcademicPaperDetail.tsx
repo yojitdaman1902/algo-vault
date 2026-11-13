@@ -12,6 +12,8 @@ export function AcademicPaperDetail({ paper, practised, revision, onPractice, on
   const [message, setMessage] = useState('');
   const questions = paperQuestions(paper);
   const stats = academicCompletion(paper.questionIds, practised);
+  // Individual, selected, topic and paper actions all submit IDs to the same
+  // parent state. Topic callers select IDs from this paper, not the global topic.
   const apply = (ids: string[], value: boolean) => {
     if (!ids.length) { toast.info('Select at least one question to continue.'); return; }
     const unique = [...new Set(ids)];

@@ -35,7 +35,7 @@ export const questions: Question[] = [
   academic("pyq-2026-06", "Subset Sum", "Dynamic Programming", "Hard", "2026", "Semester 5", "Design and Analysis of Algorithms", "Determine whether a subset reaches an exact target sum.", ["Accenture"], "nums=[3,34,4,12,5,2], target=9", "true"),
   placement("place-01", "Merge Intervals", "Arrays", "Medium", ["Amazon", "Google", "Microsoft"], "Merge all overlapping intervals and return a compact set of non-overlapping ranges.", "intervals=[[1,3],[2,6],[8,10]]", "[[1,6],[8,10]]"),
   placement("place-02", "Top K Frequent Elements", "Hashing", "Medium", ["Amazon", "Google"], "Return the k values that occur most frequently in an integer array.", "nums=[1,1,1,2,2,3], k=2", "[1,2]"),
-  placement("place-03", "Trapping Rain Water", "Arrays", "Hard", ["Amazon", "Microsoft"], "Calculate how much water can be trapped between elevation bars after raining.", "height=[0,1,0,2,1,0,1,3]", "6"),
+  placement("place-03", "Trapping Rain Water", "Arrays", "Hard", ["Amazon", "Microsoft"], "Calculate how much water can be trapped between elevation bars after raining.", "height=[0,1,0,2,1,0,1,3]", "5"),
   placement("place-04", "Word Break", "Dynamic Programming", "Medium", ["Google", "Microsoft"], "Determine whether a string can be segmented into dictionary words.", "s='leetcode', dict=['leet','code']", "true"),
   placement("place-05", "Number of Islands", "Graphs", "Medium", ["Amazon", "Microsoft", "TCS"], "Count connected land components in a grid using BFS or DFS.", "grid=[[1,1,0],[0,1,0],[1,0,1]]", "3"),
   placement("place-06", "LRU Cache", "Hashing", "Hard", ["Amazon", "Google", "Microsoft"], "Design a least-recently-used cache with O(1) get and put operations.", "cache.put(1,1), cache.get(1)", "1"),

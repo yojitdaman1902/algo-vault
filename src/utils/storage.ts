@@ -8,9 +8,15 @@ const memory = new Map<string, string>();
 const failedKeys = new Set<string>();
 function read(key: string) {
   if (failedKeys.has(key)) return memory.get(key) ?? null;
-  try { return localStorage.getItem(key); } catch { return memory.get(key) ?? null; }
+  try {
+    const value = localStorage.getItem(key);
+    if (value !== null) memory.set(key, value);
+    return value;
+  } catch { return memory.get(key) ?? null; }
 }
 function write(key: string, value: string) {
+  // Keep the newest session copy if quota/privacy settings reject a write.
+  // Reading stale disk data afterward would otherwise appear to undo progress.
   memory.set(key, value);
   try { localStorage.setItem(key, value); failedKeys.delete(key); }
   catch {

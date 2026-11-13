@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useTrackedAttempt } from '@/hooks/useTrackedAttempt';
 import type { AssessableQuestion, QuestionAttempt } from '@/types/assessment';
@@ -9,7 +9,15 @@ export function AttemptPanel({question,previous,onFinish,expired=false,single=fa
  const [answer,setAnswer]=useState('');
  const [feedback,setFeedback]=useState<boolean|null>(null);
  const [replay,setReplay]=useState<number|null>(null);
- useEffect(()=>{if(expired)onFinish(tracker.finish());},[expired]);
+ const expiryReported = useRef(false);
+ const finish = tracker.finish;
+ // Parent callbacks change as the clock ticks; expiry still reports only once.
+ useEffect(() => {
+   if (expired && !expiryReported.current) {
+     expiryReported.current = true;
+     onFinish(finish());
+   }
+ }, [expired, onFinish, finish]);
  const locked=single?feedback!==null:feedback===true;
  return <div className={`grid gap-5 ${previous?'lg:grid-cols-2':''}`}><section className="surface-card space-y-5">
  <div className="flex justify-between gap-3"><span className="eyebrow">{question.topic}</span><strong className="text-indigo-700">{time(tracker.elapsed)} active</strong></div>

@@ -7,7 +7,7 @@ Open the preview → select any offered year if prompted → **Enter AlgoVault**
 
 ## Open / install
 - **Existing Dyad project:** open the Preview panel. Dependencies are already part of the project; no setup form, account, API key, or `.env` file is needed.
-- **Source handoff:** use Node.js 22.12+ and pnpm in a Node-capable IDE. Open the project root, use the IDE package-manager integration to install dependencies from `package.json` and `pnpm-lock.yaml`, then start the **dev** package script through its task runner. Vite is configured for port **8080**; open the URL shown by that task.
+- **Source handoff:** use Node.js 22.12+ and a Node-capable IDE. Install dependencies from `package.json` using the IDE package-manager integration, then start the **dev** package script through its task runner. Vite is configured for port **8080**. See the root README for current command references; this guide does not assume an unverified lockfile exists.
 - Available package tasks: **build** creates `dist/`; **preview** serves a previously built output; **lint** checks source. A Vite build is not a standalone TypeScript check. No automated test script is configured.
 - Dependency installation needs registry connectivity; application calculations do not need a remote data service. Serve via localhost or HTTPS, not by opening `index.html` as a file. HTTPS/localhost is required for signature attempt UUID generation.
 

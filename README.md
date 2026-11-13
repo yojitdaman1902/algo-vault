@@ -2,96 +2,110 @@
 
 **Ace Your Semesters. Crack Your Placements.**
 
-Two local-first preparation pillars: **Campus Academics** for semester examination practice and **Placement Preparation** for Coding & DSA, Quantitative Aptitude, Logical Reasoning, Verbal Ability / English, and OA simulations. No required backend, authentication, external API, environment configuration, or arbitrary code execution.
+AlgoVault is a local-first study workspace for **Problem Card 17 — PYQ Bank**. Campus Academics provides fictional previous-year-style papers with subject, semester, year and keyword filters, reversible practice tracking, and academic progress. Placement Preparation adds DSA, aptitude, reasoning, English, deterministic OA simulations, Code Autopsy and Ghost Mode. Both catalogs share one five-item Revise Next queue. No login, database, environment file, external data API or PDF hosting is required.
 
-## Campus Academics
+## Features and sample data
 
-Open **Campus Academics** in the main navigation, then **Explore PYQ Papers**. The dedicated academic module contains **14 fictional papers, 70 questions, 12 subjects, semesters 1–4, years 2022–2026, and three examination types**. Every paper is explicitly illustrative/demo data, not a verified past university examination.
+- **Campus Academics:** 14 fictional papers, 70 questions, 12 subjects, semesters 1–4, years 2022–2026, three examination types. Each paper has five questions.
+- **Library:** Papers / Questions views; semester, subject, year, examination type, topic, keyword and unpractised-only filters combine with AND. Empty results include Clear Filters.
+- **Practice:** individual toggles, multiple selection, reversible bulk actions, topic actions scoped to the open paper, and whole-paper completion.
+- **Progress:** calculated from unique practised question IDs. Academic paper, topic, subject/year and semester statistics are separate from legacy bank statistics.
+- **Revision:** zero to five unique questions; unanswered or Hard questions may be pinned. Sixth-item attempts are rejected, not substituted. Remove only clears the queue; Mark Practised & Clear also completes the question.
+- **Placement:** 92 OA MCQs plus the preserved legacy DSA bank. Mini OA uses eight fixed questions, two per category, with one countdown and answer review.
+- **Signature tools:** Time Machine selects three questions from five curated DSA variants. Code Autopsy shows two predefined diagnostic traces; Ghost Mode compares real saved attempt events.
 
-- Papers / Questions views with combined semester, subject, year, examination type, topic, keyword, and unpractised-only filters; no unrelated fallback results.
-- Paper details with individual toggles, checkbox selection, validated bulk actions, reversible topic actions scoped to that paper, and whole-paper completion.
-- Visible success notifications and a derived **Paper Completed — 100%** state.
-- Academic dashboard showing question-weighted progress by paper, subject/year, semester, and topic, plus incomplete-topic review links.
-- Same existing practised-ID Set and five-item Revise Next queue; completing an academic revision item updates its paper and all academic metrics. Existing placement data and assessment history are retained.
+All academic papers and company/year associations are **illustrative**, not authenticated university examinations or interviews. No arbitrary code is executed. There is no implemented AlgoIDE or standalone Performance Intelligence module; existing analytics are completion statistics and assessment/ghost reports.
 
-See [Campus Academics data model, judge journey, verification checklist, and limitations](docs/CAMPUS-ACADEMICS.md). Source review was performed; browser, build, typecheck, and end-to-end tests have **not been executed** in this implementation session.
+## Tech stack
 
-## OA expansion
+React 19, TypeScript, React Router 6, Vite 8 with SWC, Tailwind CSS 3, shadcn/Radix UI, Lucide icons and Sonner notifications. Data is local TypeScript metadata; persistence uses browser localStorage.
 
-Added 30 non-DSA MCQs (10 per new category) and two DSA MCQs alongside all original questions. Category filters, answer practice with explanations/retry, category-wise progress, and one shared five-item Revise Next queue are implemented. Old question IDs and storage keys are preserved.
+## Installation and development
 
-**Demo:** Question Bank → Quantitative Aptitude → A percentage of a quantity → choose an answer → Submit → Retry or Mark as practised. Dashboard/My Progress show category completion. Use **Try the 8-question Mini OA** for two questions per category with one countdown and real scoring.
+Source-handoff commands below correspond to the existing package scripts. Use a Vite-8-compatible Node release (Node 22.12+ recommended) and npm. Dependency installation needs registry access; the core app does not require a network data service.
 
-See [OA expansion, answer-key review, scoring and test checklist](docs/OA-EXPANSION.md). Source/content review is complete; runtime/build/browser checks are still pending. Standalone answer feedback is transient; practised flags and revision IDs persist. Mini OA finished attempts share existing capped history; current rounds/reports do not resume after refresh.
+```sh
+npm install
+npm run dev
+```
 
-The original Time Machine/Autopsy/Ghost demo below remains available; its five curated DSA variants are separate from the new Mini OA selection. Earlier audit notes below describe the pre-expansion audit, not a claim that this expansion was documentation-only.
+Vite is configured for port **8080**; use the URL reported by the development task. Serve through localhost or HTTPS rather than opening `index.html` directly. Signature attempt IDs use `crypto.randomUUID()`, which requires a secure context.
 
-## Official VibeSprint submission documents
+```sh
+npm run build
+npm run preview
+npm run lint
+```
 
-| Card | Artifact |
+`build` produces `dist/`; `preview` serves that output. `build:dev` is also available. Vite transpilation is **not** a TypeScript typecheck. There is no `typecheck` or `test` npm script. The installed TypeScript compiler can validate the two configured projects explicitly:
+
+```sh
+npx tsc --noEmit -p tsconfig.app.json
+npx tsc --noEmit -p tsconfig.node.json
+```
+
+No automated test framework is configured. The final audit did not execute these commands; they are setup/validation references, not evidence of a successful build.
+
+## Main judge demo
+
+Use a fresh browser profile to avoid changing existing user progress. Select an onboarding year if prompted; it is a workspace label, not a library restriction.
+
+1. Open **Campus Academics → Explore PYQ Papers**.
+2. Filter **Semester 3 → Data Structures → 2025 → End-Semester Examination**. Expected: one five-question paper.
+3. Open it, select Q1 and Q2, then **Mark Selected as Practised**. Expected: **2/5, 40%** and a success notification.
+4. Mark **Trees** practised. Expected: Q3 and Q4 complete, paper **80%**; Trees questions in other papers stay unchanged.
+5. Mark the entire paper practised. Expected: **Paper Completed — 100%**.
+6. Open the academic dashboard. With no other work completed: **1/14 papers**, **5/70 questions (7%)**, **Data Structures 5/15 (33%)**, **Semester 3 5/25 (20%)**.
+7. Refresh and reopen Campus Academics. Saved practice should restore these values.
+
+These are expected results, **not an executed test report**. Detailed cases: [Campus Academics runbook](docs/CAMPUS-ACADEMICS.md).
+
+### Minute 40 twist: revision demo
+
+On a fresh paper, pin unanswered Q1–Q5. Open a different paper and attempt a sixth pin: expected queue-full feedback and unchanged 5/5 occupancy. In Revise Next, mark Q1 practised and clear it: expected 4/5 and source paper 20%. Remove Q2: expected 3/5 without any additional practice completion. Refresh to check persistence. A practised Hard question remains eligible; practised Easy/Medium questions do not.
+
+### Empty-result demo
+
+**2026 alone is not empty:** Programming in C and Operating Systems papers exist. Use **Semester 3 + Data Structures + 2026**, or an unmatched keyword, to demonstrate no results and Clear Filters. Do not delete valid papers to force a demo.
+
+## Persistence and privacy
+
+| Key | Data |
 |---|---|
-| DOC-01 | [README & Quickstart](docs/DOC-01-README-QUICKSTART.md) — launch/install guidance, sample data, evidence references |
-| DOC-02 | [Judge Runbook](docs/DOC-02-JUDGE-RUNBOOK.md) — exact 60-second core/twist script |
-| DOC-03 | [Five-Test Checklist](docs/DOC-03-FIVE-TEST-CHECKLIST.md) — exactly five manual tests, all marked NOT RUN |
-| DOC-04 | [User Quickstart](docs/DOC-04-USER-QUICKSTART.md) — four beginner steps |
-| DOC-05 | [Data & Privacy Note](docs/DOC-05-DATA-PRIVACY.md) — inspected storage/network behavior |
-| DOC-06 | [Handoff & Limitations](docs/DOC-06-HANDOFF-LIMITATIONS.md) — files, reset, simulations, three priorities |
+| `algovault:v1:practised` | Unique known question IDs from both catalogs |
+| `algovault:v1:revision` | Up to five unique known question IDs |
+| `algovault:v1:academic-year` | Onboarding workspace-year label |
+| `algovault:v3:attempt-history` | Up to 100 validated attempt records |
 
-### Compliance audit status
-Source inspection/search confirmed local metadata/calculations, no required environment reads or API services, no apparent embedded credentials in reviewed source/config, and the implemented eligibility/capacity/clear/persistence/filter guards. Company tags and paper associations are illustrative; familiar names are not proof of historical interviews. Signature grading is deterministic and no arbitrary code is executed.
+Malformed JSON has a safe fallback; malformed attempt entries are filtered individually. Write failures retain session data and show a warning. Practice and queue IDs are validated against both catalogs. No academic completion flags are stored separately. Old prototype v2 history is not imported. Local storage is unencrypted and browser/origin-specific; no cross-tab or cross-device synchronization is implemented.
 
-Confirmed gaps were the six missing doc cards, scattered setup/privacy/handoff guidance, and missing verified demo evidence. This audit adds documentation only: no functional source, navigation, sample data, dependencies, storage keys, or saved user progress was changed.
+## Verification status
 
-**Not a runtime pass:** no build, typecheck, browser interaction, network capture, or console checks could be executed with this session's tools. Existing build output does not establish current build success. No verified demo URL, screenshot, or recording is supplied. DOC-01 lists planned capture references; complete them and execute DOC-03 before submission. A documentation artifact is now prepared; full submission evidence is still outstanding.
+| Validation | Final audit result |
+|---|---|
+| TypeScript | NOT RUN |
+| ESLint | NOT RUN |
+| Production build | NOT RUN |
+| Automated tests | NOT RUN — no framework/test script present |
+| Browser, refresh, mobile, regression checks | NOT RUN |
 
-## Signature demo (2–3 minutes)
-1. Enter the workspace and choose **Time Machine**.
-2. Keep Amazon / 2024 / Mixed / Demo. Start simulation.
-3. For duplicate Two Sum, submit `[0, 0]`, then Save & next.
-4. For unsorted Two Sum, submit `No solution`, then Save & next.
-5. For Dijkstra, select `O((V + E) log V)` and save.
-6. Open Run Code Autopsy on either wrong answer. Use Previous / Next / Reset.
-7. Retry: select `[0, 1]` for duplicates or `[1, 2]` for unsorted input, Submit, then Finish challenge.
-8. Challenge your ghost. Open a hint or submit a wrong answer to create real events; finish and compare.
-9. Return to Time Machine home. Expand saved attempts, refresh, and reopen history.
+Source inspection and targeted repairs were performed. No execution/browser tools were available in the audit session. This is not a claim of submission readiness or a clean dependency audit. See [EVALUATION_GUIDE.md](EVALUATION_GUIDE.md) for traceable implementation references and findings.
 
-## Implemented
-- Three-question timed assessments, strict company/year/difficulty matching, explicit preset fallback, Demo (3 min) and Practice (12 min), one continuous countdown.
-- Verified multiple-choice scoring. Reports separate correct, incorrect, and unanswered questions, wall duration, active question times, and topic signals.
-- Two answer-specific Two Sum diagnostic traces. Unsupported errors receive a general explanation, not an invented cause.
-- Shared tracked attempts for assessments, standalone practice, and retries; timestamped submissions, hints, completion, and visibility-aware active time.
-- Ghost comparison and scrubbable event replay. First-time users create their own baseline. Comparison uses the fastest saved successful attempt, or most recent attempt if none succeeded.
-- Existing question-bank progress and revision storage remain independent and unchanged.
+## Known limitations
 
-## Persistence
-- Existing state: `algovault:v1:*`.
-- Signature history: `algovault:v3:attempt-history`, 100 records maximum, validated on read.
-- Old prototype v2 records are deliberately not imported: they may contain fabricated hint times and cumulative question timings.
-- Storage failure shows a warning and falls back to memory for this session.
+- Academic completion is self-reported, not answer grading; papers are fictional, with no PDF requirement.
+- Active page/filter/selection state and unfinished assessment rounds do not resume after refresh. Saved practice, revision and completed attempts do persist when storage is available.
+- Legacy academic-tagged DSA entries remain in the old bank; dedicated academic metrics cover only `src/data/academics.ts`.
+- Some OA prompts overlap in content, but IDs remain distinct to preserve saved progress. Corrected answer keys apply to future practice; historic attempt results are not rewritten.
+- Assessments use fixed answer fixtures, not compilation, code execution, AI analysis or secure sandboxing. Diagnostics cannot infer arbitrary code failures.
+- No verified deployment URL, screenshot recording or runtime validation evidence is included by this audit.
 
-## Limitations and verification status
-- Five curated assessable variants, not arbitrary question/code evaluation. The unsorted Two Sum variant links to its existing bank question through `bankQuestionId`.
-- Company and variant-year associations are illustrative, not verified interview history. Graduation year is context only.
-- Many filter combinations cannot supply three questions; starting is disabled until filters change or the explicit Amazon/2024/Mixed preset is selected.
-- Tracked practice and Ghost Mode are opened from the Time Machine library/reports, not the legacy question detail modal.
-- Completed question attempts persist; active round state and aggregate round reports do not resume after refresh. Unsaved current questions are discarded on exit.
-- Hints reveal the verified explanation and are counted; this is educational practice, not a proctored exam.
-- Source review performed. Typecheck, production build, browser/console, responsive, countdown, persistence, and regression interaction checks still require execution in preview; no runtime pass is claimed.
+## Documentation
 
-See ARCHITECTURE.md, DECISIONS.md, and TASKS.md for implementation details and verification checklist.
+- [Evaluation guide](EVALUATION_GUIDE.md): official requirement mapping, code paths, audit findings and validation status.
+- [Campus Academics](docs/CAMPUS-ACADEMICS.md): data model and academic acceptance checklist.
+- [Architecture](ARCHITECTURE.md): original signature-module architecture.
+- [Legacy judge runbook](docs/DOC-02-JUDGE-RUNBOOK.md) and [manual five-test checklist](docs/DOC-03-FIVE-TEST-CHECKLIST.md).
+- [Data/privacy note](docs/DOC-05-DATA-PRIVACY.md), [handoff notes](docs/DOC-06-HANDOFF-LIMITATIONS.md), [OA expansion notes](docs/OA-EXPANSION.md).
 
-## Minute 40 official twist — Weak-topic review
-
-Enhanced the existing Revise Next queue rather than rebuilding the application:
-- Eligible for new pinning: unanswered (not practised) OR Hard. No personal difficult flag exists in this app, so none was added.
-- Practised Easy/Medium questions have disabled pin controls with visible explanation. Existing saved items remain until explicitly removed, even if later marked practised.
-- Exactly five slots, with a dynamic counter and clear queue-full notification. New pins never evict existing entries. Duplicate additions are rejected; the already-pinned control explicitly becomes Remove from Queue, retaining the existing toggle behavior.
-- **Mark Practised & Clear** adds the ID to the central practised Set (never toggles it off), removes the queued ID, updates all derived metrics, and shows a success toast.
-- **Remove from Queue** does not change practised status. Already-practised entries offer **Clear from Queue**.
-- **Topics to Revisit** ranks incomplete topics by actual completion ratio, breaks ties alphabetically, and links the lowest three to Question Bank with topic + unanswered filters set.
-- Existing subject, semester, academic year, keyword, company, topic, and difficulty filters combine with AND. Clear Filters also clears the unanswered shortcut.
-- Required empty states: “All caught up! Your revision queue is clear.” and “No questions match your current filters.” Both have working exploration/reset actions.
-
-Persistence retains `algovault:v1:practised` and `algovault:v1:revision`. Reads and writes discard invalid IDs, remove duplicates, and normalize corrupted oversized queues to the first five valid distinct IDs. Invalid JSON safely becomes empty data; valid entries in mixed arrays are retained. Browser-storage failure gives a warning and memory-only fallback. No PDFs, backend, APIs, or dependencies were added.
-
-Verification: reviewed source wiring, queue guards, idempotent completion, filter conjunctions, data fixtures, and unchanged signature integration. Tests A–I have not been executed in a browser; no test/build/browser execution tool is available in this session. Detailed manual cases are in TASKS.md.
+Earlier documents describe earlier implementation stages; current scope and counts are summarized here and in the evaluation guide. Manual checklists are not test-pass evidence.

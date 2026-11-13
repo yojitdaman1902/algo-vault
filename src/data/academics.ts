@@ -1,5 +1,8 @@
 import type { Difficulty, Question } from '@/types/question';
 
+// Fictional fixtures, not verified university papers. Each generated question
+// belongs to exactly one paper; persisted practice lives in the shared ID Set,
+// never in these records. Stable IDs must not be reassigned to different papers.
 export interface AcademicSubject { id: string; name: string; semester: number }
 export const examinationTypes = ['Internal Assessment 1', 'Internal Assessment 2', 'End-Semester Examination'] as const;
 export interface AcademicPaper {
