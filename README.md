@@ -37,3 +37,19 @@ Local-first DSA question bank and signature learning workspace. No backend, auth
 - Source review performed. Typecheck, production build, browser/console, responsive, countdown, persistence, and regression interaction checks still require execution in preview; no runtime pass is claimed.
 
 See ARCHITECTURE.md, DECISIONS.md, and TASKS.md for implementation details and verification checklist.
+
+## Minute 40 official twist — Weak-topic review
+
+Enhanced the existing Revise Next queue rather than rebuilding the application:
+- Eligible for new pinning: unanswered (not practised) OR Hard. No personal difficult flag exists in this app, so none was added.
+- Practised Easy/Medium questions have disabled pin controls with visible explanation. Existing saved items remain until explicitly removed, even if later marked practised.
+- Exactly five slots, with a dynamic counter and clear queue-full notification. New pins never evict existing entries. Duplicate additions are rejected; the already-pinned control explicitly becomes Remove from Queue, retaining the existing toggle behavior.
+- **Mark Practised & Clear** adds the ID to the central practised Set (never toggles it off), removes the queued ID, updates all derived metrics, and shows a success toast.
+- **Remove from Queue** does not change practised status. Already-practised entries offer **Clear from Queue**.
+- **Topics to Revisit** ranks incomplete topics by actual completion ratio, breaks ties alphabetically, and links the lowest three to Question Bank with topic + unanswered filters set.
+- Existing subject, semester, academic year, keyword, company, topic, and difficulty filters combine with AND. Clear Filters also clears the unanswered shortcut.
+- Required empty states: “All caught up! Your revision queue is clear.” and “No questions match your current filters.” Both have working exploration/reset actions.
+
+Persistence retains `algovault:v1:practised` and `algovault:v1:revision`. Reads and writes discard invalid IDs, remove duplicates, and normalize corrupted oversized queues to the first five valid distinct IDs. Invalid JSON safely becomes empty data; valid entries in mixed arrays are retained. Browser-storage failure gives a warning and memory-only fallback. No PDFs, backend, APIs, or dependencies were added.
+
+Verification: reviewed source wiring, queue guards, idempotent completion, filter conjunctions, data fixtures, and unchanged signature integration. Tests A–I have not been executed in a browser; no test/build/browser execution tool is available in this session. Detailed manual cases are in TASKS.md.

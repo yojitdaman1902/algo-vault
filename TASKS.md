@@ -23,3 +23,33 @@ Pending manual preview verification:
 - [ ] Typecheck/build and console-error checks (no execution tools available in implementation session).
 
 Not implemented: active session resume, legacy detail-modal Ghost entry, arbitrary code grading, automated browser tests.
+
+## Official Minute 40 twist
+
+Implemented: queue eligibility (unanswered OR Hard), five-slot guard, distinct complete/remove actions, shared pin explanations, real weak-topic ranking, unanswered/topic shortcuts, exact empty-state copy, and hardened existing persistence. No personal difficult flag was present; none added.
+
+Source review performed (not runtime test passes):
+- A/B: insertion refuses queue length >= 5; normal reads/writes normalize unique valid IDs to <= 5.
+- C: addToQueue checks duplicates before append. Already-pinned UI explicitly changes to removal, never appends twice.
+- D: completion uses Set.add, removes the ID and updates both shared states; repeats are ignored once removed.
+- E: removal touches only revision state.
+- F: original v1 storage keys retained; malformed JSON and invalid IDs are handled; effects persist normalized state.
+- G: all filter conditions are conjunctive; known fixture below verified against source data.
+- H: zero results show exact requested wording; Clear Filters resets every criterion, including unanswered-only.
+- I: dashboard/progress still consume the same shared states; signature code and entry remain unchanged.
+
+Pending browser scenarios (all A–I require execution):
+- [ ] A: Make five questions unanswered and pin them; observe 5 / 5 slots filled.
+- [ ] B: Try another eligible pin; observe “Queue full — maximum five questions” with all five unchanged.
+- [ ] C: Revisit an already-pinned question; verify a single queue entry and explicitly labeled Remove from Queue control. Remove/re-pin and confirm count changes by one.
+- [ ] D: Mark Practised & Clear an unanswered queue item; verify practised status, dashboard/progress increment, freed slot, and success toast. If already practised, Clear must not undo progress.
+- [ ] E: Remove an unanswered item; verify it remains unanswered.
+- [ ] F: Refresh after pins and completion; confirm both states. Check malformed JSON, mixed valid/invalid IDs, duplicates, and oversized saved queue recovery without crashes.
+- [ ] G: Filter Data Structures + Semester 3 + 2022 + keyword “Two Sum”; expect Two Sum using Hashing. Add company/difficulty filters to verify their continued conjunction.
+- [ ] H: Search “zzzz-nonexistent”; verify exact no-results message and Clear Filters restoration.
+- [ ] I: Check dashboard, progress, details, all old bank filters, and signature demo regression.
+- [ ] Eligibility: practised Easy/Medium pin disabled with explanation; practised Hard still pinnable.
+- [ ] Weak-topic shortcut: opens the selected topic with unanswered-only enabled; Clear Filters resets both.
+- [ ] Mobile: queue actions wrap, empty-state exploration works, and pin explanation is readable.
+
+Limits: browser refresh durability depends on available localStorage. No multi-tab synchronization added. Runtime/typecheck/build tools are unavailable; all outcomes above are code-review expectations, not claimed executed tests.

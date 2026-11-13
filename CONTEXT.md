@@ -7,3 +7,18 @@ Partial prototype signature code was replaced because it silently ignored filter
 No dependencies, external services, backend, or env vars added. No lifecycle restart needed for these source edits.
 
 Runtime validation is pending: this session has file tools but no build/typecheck/browser runner. See TASKS.md. Do not represent source inspection as successful automated or preview testing.
+
+## Minute 40 official twist
+
+The original revision queue was enhanced for unanswered/Hard eligibility and practice-and-clear. Existing central practised/revision states remain in Workspace; synchronized refs let rapid actions validate against the latest values, and effects persist through the same v1 keys. Completion uses Set.add, not the normal practise toggle, and removal is separate.
+
+Related modules:
+- `utils/revision.ts`: eligibility, five-slot insertion guard, valid-ID normalization, lowest-completion topic ranking.
+- `utils/storage.ts`: existing keys retained, validated reads/writes, safe storage-failure feedback.
+- `components/revision/RevisionWorkspace.tsx`: counter, clear/complete/remove, empty state and weak-topic shortcuts.
+- `components/revision/RevisionPinButton.tsx`: shared eligibility explanation for original cards and details.
+- `components/questions/QuestionBank.tsx`: extracted existing multi-filter behavior plus unanswered/topic entry and exact required empty state. Original QuestionCard remains reused.
+
+No changes to signature modules, question dataset, dashboard or progress calculations. Existing queued items remain until explicit clear/removal even if marked practised after pinning. Oversized corrupted data is normalized to the first five valid unique IDs, never by evicting an item to accept a new pin. Personal difficulty marking was not present and remains out of scope.
+
+Source review covered the official A–I paths; browser tests remain pending. See TASKS.md for exact scenarios and limitations.
