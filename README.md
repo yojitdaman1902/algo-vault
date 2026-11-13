@@ -1,111 +1,99 @@
-# AlgoVault
+# AlgoVault — 4minute read
 
 **Ace Your Semesters. Crack Your Placements.**
 
-AlgoVault is a local-first study workspace for **Problem Card 17 — PYQ Bank**. Campus Academics provides fictional previous-year-style papers with subject, semester, year and keyword filters, reversible practice tracking, and academic progress. Placement Preparation adds DSA, aptitude, reasoning, English, deterministic OA simulations, Code Autopsy and Ghost Mode. Both catalogs share one five-item Revise Next queue. No login, database, environment file, external data API or PDF hosting is required.
+AlgoVault is a browser-based academic and placement preparation platform built for **OWASP NIE VibeSprint 1.0 — Problem Card 17 (PYQ Bank)**.
 
-## Features and sample data
+Our goal is simple: help students prepare for semester exams, practise for placements, and track their progress in one place.
 
-- **Campus Academics:** 14 fictional papers, 70 questions, 12 subjects, semesters 1–4, years 2022–2026, three examination types. Each paper has five questions.
-- **Library:** Papers / Questions views; semester, subject, year, examination type, topic, keyword and unpractised-only filters combine with AND. Empty results include Clear Filters.
-- **Practice:** individual toggles, multiple selection, reversible bulk actions, topic actions scoped to the open paper, and whole-paper completion.
-- **Progress:** calculated from unique practised question IDs. Academic paper, topic, subject/year and semester statistics are separate from legacy bank statistics.
-- **Revision:** zero to five unique questions; unanswered or Hard questions may be pinned. Sixth-item attempts are rejected, not substituted. Remove only clears the queue; Mark Practised & Clear also completes the question.
-- **Placement:** 92 OA MCQs plus the preserved legacy DSA bank. Mini OA uses eight fixed questions, two per category, with one countdown and answer review.
-- **Signature tools:** Time Machine selects three questions from five curated DSA variants. Code Autopsy shows two predefined diagnostic traces; Ghost Mode compares real saved attempt events.
+## Features
 
-All academic papers and company/year associations are **illustrative**, not authenticated university examinations or interviews. No arbitrary code is executed. There is no implemented AlgoIDE or standalone Performance Intelligence module; existing analytics are completion statistics and assessment/ghost reports.
+### Campus Academics
+- **14 sample papers, 70 questions, 12 subjects**, covering semesters 1–4 and years 2022–2026.
+- Filter by semester, subject, year, examination type, topic, or keyword.
+- Mark individual questions, entire topics, or papers as practised.
+- Track completion through automatically updated progress indicators.
+- Undo practice actions and clear filters when no results appear.
 
-## Tech stack
+### Placement Preparation
+- **92 OA MCQs** covering DSA, Quantitative Aptitude, Logical Reasoning, and Verbal Ability.
+- **Mini OA:** Eight-question assessments across all four categories.
+- **DSA Time Machine:** Three-question practice simulations.
+- **Code Autopsy:** Visual explanations of two predefined coding mistakes.
+- **Ghost Mode:** Compare performance with your saved previous attempts.
 
-React 19, TypeScript, React Router 6, Vite 8 with SWC, Tailwind CSS 3, shadcn/Radix UI, Lucide icons and Sonner notifications. Data is local TypeScript metadata; persistence uses browser localStorage.
+### Revise Next — Minute 40 Twist
+Pin up to **five unanswered or difficult questions** for revision.
 
-## Installation and development
+Remove questions individually or use **Mark Practised & Clear**. Duplicate pins and attempts to exceed five items are prevented.
 
-Source-handoff commands below correspond to the existing package scripts. Use a Vite-8-compatible Node release (Node 22.12+ recommended) and npm. Dependency installation needs registry access; the core app does not require a network data service.
+## Getting Started
 
-```sh
+**Tech stack:** React 19, TypeScript, Vite 8, Tailwind CSS, React Router, and shadcn/Radix UI.
+
+Requires Node.js 22.12+ (recommended) and npm.
+
+```bash
 npm install
 npm run dev
 ```
 
-Vite is configured for port **8080**; use the URL reported by the development task. Serve through localhost or HTTPS rather than opening `index.html` directly. Signature attempt IDs use `crypto.randomUUID()`, which requires a secure context.
+Open the local URL displayed in your terminal (configured for port 8080).
 
-```sh
+To validate or preview the production build:
+
+```bash
+npm run lint
 npm run build
 npm run preview
-npm run lint
 ```
 
-`build` produces `dist/`; `preview` serves that output. `build:dev` is also available. Vite transpilation is **not** a TypeScript typecheck. There is no `typecheck` or `test` npm script. The installed TypeScript compiler can validate the two configured projects explicitly:
+No login, database, external API, or `.env` file is required.
 
-```sh
-npx tsc --noEmit -p tsconfig.app.json
-npx tsc --noEmit -p tsconfig.node.json
-```
+## How to Use
 
-No automated test framework is configured. The final audit did not execute these commands; they are setup/validation references, not evidence of a successful build.
+1. Open **Campus Academics** and filter papers by semester, subject, or year.
+2. Select a paper and mark questions as practised.
+3. Watch your progress update automatically.
+4. Pin difficult questions to **Revise Next** and clear them after practice.
 
-## Main judge demo
+## Judge Demo — 60 Seconds
 
-Use a fresh browser profile to avoid changing existing user progress. Select an onboarding year if prompted; it is a workspace label, not a library restriction.
+1. Navigate to **Campus Academics → Explore PYQ Papers**.
+2. Filter **Semester 3 → Data Structures → 2025 → End-Semester Examination**.
+3. Mark Q1 and Q2 practised. Expected progress: **40%**.
+4. Mark the Trees topic practised. Expected progress: **80%**.
+5. Complete the paper to reach **100%**.
+6. Pin an eligible question to Revise Next, then remove it.
 
-1. Open **Campus Academics → Explore PYQ Papers**.
-2. Filter **Semester 3 → Data Structures → 2025 → End-Semester Examination**. Expected: one five-question paper.
-3. Open it, select Q1 and Q2, then **Mark Selected as Practised**. Expected: **2/5, 40%** and a success notification.
-4. Mark **Trees** practised. Expected: Q3 and Q4 complete, paper **80%**; Trees questions in other papers stay unchanged.
-5. Mark the entire paper practised. Expected: **Paper Completed — 100%**.
-6. Open the academic dashboard. With no other work completed: **1/14 papers**, **5/70 questions (7%)**, **Data Structures 5/15 (33%)**, **Semester 3 5/25 (20%)**.
-7. Refresh and reopen Campus Academics. Saved practice should restore these values.
+These are expected results, not recorded test outcomes.
 
-These are expected results, **not an executed test report**. Detailed cases: [Campus Academics runbook](docs/CAMPUS-ACADEMICS.md).
+## Five-Test Checklist
 
-### Minute 40 twist: revision demo
-
-On a fresh paper, pin unanswered Q1–Q5. Open a different paper and attempt a sixth pin: expected queue-full feedback and unchanged 5/5 occupancy. In Revise Next, mark Q1 practised and clear it: expected 4/5 and source paper 20%. Remove Q2: expected 3/5 without any additional practice completion. Refresh to check persistence. A practised Hard question remains eligible; practised Easy/Medium questions do not.
-
-### Empty-result demo
-
-**2026 alone is not empty:** Programming in C and Operating Systems papers exist. Use **Semester 3 + Data Structures + 2026**, or an unmatched keyword, to demonstrate no results and Clear Filters. Do not delete valid papers to force a demo.
-
-## Persistence and privacy
-
-| Key | Data |
+| Test | Expected result |
 |---|---|
-| `algovault:v1:practised` | Unique known question IDs from both catalogs |
-| `algovault:v1:revision` | Up to five unique known question IDs |
-| `algovault:v1:academic-year` | Onboarding workspace-year label |
-| `algovault:v3:attempt-history` | Up to 100 validated attempt records |
+| Search with no matches | Empty state with Clear Filters |
+| Mark a question practised | Progress updates |
+| Attempt a sixth revision pin | Rejected; queue stays at five |
+| Refresh the page | Saved progress persists |
+| Mark an entire paper practised | Completion reaches 100% |
 
-Malformed JSON has a safe fallback; malformed attempt entries are filtered individually. Write failures retain session data and show a warning. Practice and queue IDs are validated against both catalogs. No academic completion flags are stored separately. Old prototype v2 history is not imported. Local storage is unencrypted and browser/origin-specific; no cross-tab or cross-device synchronization is implemented.
+For an empty-result demonstration, select **Semester 3 + Data Structures + 2026**.
 
-## Verification status
+## Privacy & Limitations
 
-| Validation | Final audit result |
-|---|---|
-| TypeScript | NOT RUN |
-| ESLint | NOT RUN |
-| Production build | NOT RUN |
-| Automated tests | NOT RUN — no framework/test script present |
-| Browser, refresh, mobile, regression checks | NOT RUN |
-
-Source inspection and targeted repairs were performed. No execution/browser tools were available in the audit session. This is not a claim of submission readiness or a clean dependency audit. See [EVALUATION_GUIDE.md](EVALUATION_GUIDE.md) for traceable implementation references and findings.
-
-## Known limitations
-
-- Academic completion is self-reported, not answer grading; papers are fictional, with no PDF requirement.
-- Active page/filter/selection state and unfinished assessment rounds do not resume after refresh. Saved practice, revision and completed attempts do persist when storage is available.
-- Legacy academic-tagged DSA entries remain in the old bank; dedicated academic metrics cover only `src/data/academics.ts`.
-- Some OA prompts overlap in content, but IDs remain distinct to preserve saved progress. Corrected answer keys apply to future practice; historic attempt results are not rewritten.
-- Assessments use fixed answer fixtures, not compilation, code execution, AI analysis or secure sandboxing. Diagnostics cannot infer arbitrary code failures.
-- No verified deployment URL, screenshot recording or runtime validation evidence is included by this audit.
+- All academic papers and company associations are illustrative.
+- Progress, revision queues, and attempt history are stored locally in the browser.
+- No personal account or external data service is required.
+- Academic practice is self-reported, not automatically graded.
+- Code Autopsy uses predefined examples; arbitrary code execution and AlgoIDE are not implemented.
+- A standalone Performance Intelligence module is not implemented.
+- Automated tests are not configured. Build, lint, and runtime checks were not executed during the final audit.
 
 ## Documentation
 
-- [Evaluation guide](EVALUATION_GUIDE.md): official requirement mapping, code paths, audit findings and validation status.
-- [Campus Academics](docs/CAMPUS-ACADEMICS.md): data model and academic acceptance checklist.
-- [Architecture](ARCHITECTURE.md): original signature-module architecture.
-- [Legacy judge runbook](docs/DOC-02-JUDGE-RUNBOOK.md) and [manual five-test checklist](docs/DOC-03-FIVE-TEST-CHECKLIST.md).
-- [Data/privacy note](docs/DOC-05-DATA-PRIVACY.md), [handoff notes](docs/DOC-06-HANDOFF-LIMITATIONS.md), [OA expansion notes](docs/OA-EXPANSION.md).
+See **EVALUATION_GUIDE.md** for implementation references, architecture, requirement mapping, and verification details.
 
-Earlier documents describe earlier implementation stages; current scope and counts are summarized here and in the evaluation guide. Manual checklists are not test-pass evidence.
+---
+
+**Built for VibeSprint 1.0 — One platform for semester exams and campus placements.**
