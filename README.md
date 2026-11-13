@@ -2,6 +2,24 @@
 
 Local-first DSA question bank and signature learning workspace. No backend, authentication, external APIs, or code execution.
 
+## Official VibeSprint submission documents
+
+| Card | Artifact |
+|---|---|
+| DOC-01 | [README & Quickstart](docs/DOC-01-README-QUICKSTART.md) — launch/install guidance, sample data, evidence references |
+| DOC-02 | [Judge Runbook](docs/DOC-02-JUDGE-RUNBOOK.md) — exact 60-second core/twist script |
+| DOC-03 | [Five-Test Checklist](docs/DOC-03-FIVE-TEST-CHECKLIST.md) — exactly five manual tests, all marked NOT RUN |
+| DOC-04 | [User Quickstart](docs/DOC-04-USER-QUICKSTART.md) — four beginner steps |
+| DOC-05 | [Data & Privacy Note](docs/DOC-05-DATA-PRIVACY.md) — inspected storage/network behavior |
+| DOC-06 | [Handoff & Limitations](docs/DOC-06-HANDOFF-LIMITATIONS.md) — files, reset, simulations, three priorities |
+
+### Compliance audit status
+Source inspection/search confirmed local metadata/calculations, no required environment reads or API services, no apparent embedded credentials in reviewed source/config, and the implemented eligibility/capacity/clear/persistence/filter guards. Company tags and paper associations are illustrative; familiar names are not proof of historical interviews. Signature grading is deterministic and no arbitrary code is executed.
+
+Confirmed gaps were the six missing doc cards, scattered setup/privacy/handoff guidance, and missing verified demo evidence. This audit adds documentation only: no functional source, navigation, sample data, dependencies, storage keys, or saved user progress was changed.
+
+**Not a runtime pass:** no build, typecheck, browser interaction, network capture, or console checks could be executed with this session's tools. Existing build output does not establish current build success. No verified demo URL, screenshot, or recording is supplied. DOC-01 lists planned capture references; complete them and execute DOC-03 before submission. A documentation artifact is now prepared; full submission evidence is still outstanding.
+
 ## Signature demo (2–3 minutes)
 1. Enter the workspace and choose **Time Machine**.
 2. Keep Amazon / 2024 / Mixed / Demo. Start simulation.

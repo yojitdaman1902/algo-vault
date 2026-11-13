@@ -22,3 +22,11 @@ Related modules:
 No changes to signature modules, question dataset, dashboard or progress calculations. Existing queued items remain until explicit clear/removal even if marked practised after pinning. Oversized corrupted data is normalized to the first five valid unique IDs, never by evicting an item to accept a new pin. Personal difficulty marking was not present and remains out of scope.
 
 Source review covered the official A–I paths; browser tests remain pending. See TASKS.md for exact scenarios and limitations.
+
+## Official compliance/documentation audit
+
+Six concise DOC-01 through DOC-06 files now live in docs/ and are linked from README.md. They include GUI/task-runner setup guidance, a 60-second judge script, exactly five manual tests, four-step user guidance, source-based privacy inventory, and handoff/reset/limitations.
+
+No functional code, dependencies, navigation, sample data, or persistence keys were modified during this audit. No required environment variables/external runtime service or apparent embedded credentials were found in inspected source/config. The template external link and cookie-writing UI sidebar are unused by current mounted app code; hosting/dependency internals were not security-audited.
+
+Submission is not yet fully evidenced: build/typecheck/browser tests remain unexecuted, and no verified public preview URL, screenshot, or recording is supplied. DOC-01 capture filenames are planned references only. Preserve this distinction in future handoffs. The audit did not clear or overwrite existing user progress.

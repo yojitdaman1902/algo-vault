@@ -53,3 +53,14 @@ Pending browser scenarios (all A–I require execution):
 - [ ] Mobile: queue actions wrap, empty-state exploration works, and pin explanation is readable.
 
 Limits: browser refresh durability depends on available localStorage. No multi-tab synchronization added. Runtime/typecheck/build tools are unavailable; all outcomes above are code-review expectations, not claimed executed tests.
+
+## Submission compliance audit
+- [x] Inspect active app/config for environment reads, service dependencies, network calls, storage writes, and apparent embedded secrets. No required service/config dependency found; unused template link/sidebar distinguished from mounted UI.
+- [x] Review core guards and signature simulation disclosures. No functional correction identified as necessary for the official constraints; source left untouched.
+- [x] Create and link all six official cards in docs/. DOC-03 contains exactly five NOT RUN manual tests.
+- [ ] Execute DOC-03 and record actual observations, browser/date, and evidence.
+- [ ] Execute build, lint, TypeScript validation and console/mobile checks with an execution-capable environment. Existing dist/ is not a current pass.
+- [ ] Capture real screenshots/recording and/or verify a judge-accessible demo URL. Planned filenames in DOC-01 are not existing evidence.
+- [ ] Package source/manifests/lockfile/config/docs, excluding personal/editor state and dependency folders.
+
+Audit actions actually performed: file reads, directory listings, source/config searches, logic review, and documentation inventory/checklist count checks. No browser test, build, dependency reinstall, or dev-server restart was executed.
